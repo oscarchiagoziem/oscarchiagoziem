@@ -6,7 +6,7 @@ from .models import Sheet, Audio, Video, Document
 from account.models import Campus, Executive_Akpugo
 from about.models import About
 from django.contrib import messages
-import fitz, os, shutil
+import os, shutil
 
 
 # Create your views here.
@@ -135,36 +135,6 @@ def sheet_type(request, sheettype):
                    'page_obj': page_obj, }
         return render(request, 'library/sheet_type.html', context)
 
-
-def getcoverpage(img_name, document, title):
-    doc = fitz.open(document)
-    count = 0
-    for page in doc:
-        if count == 1:
-            pass
-        else:
-            count += 1
-            pix = page.getPixmap()
-            img_name = img_name.replace(' ', '_')
-            img_dir = img_name.replace('.pdf', '')
-            img_dir = img_dir.replace(' ', '_')
-            dir = document.replace('.pdf', '')
-            dir = dir.replace(dir[dir.index(img_dir):], '')
-            pix.writeImage(f"{img_dir}.png")
-            # print(document, '---------------------====', img_dir, '+++', dir)
-
-            original = rf"{img_dir}.png"
-            target = rf"{dir}/{img_dir}.png"
-
-            shutil.move(original, target)
-            print(document, '---------------------====', img_dir, '+++', dir + '/' + img_dir + '.png')
-
-            saveimg = Sheet.objects.get(title=title)
-            saveimg.cover = dir + img_dir + '.png'
-            saveimg.save()
-            return
-
-
 @login_required
 def viewsheet(request, sheettype, sheetname):
     sheet = Sheet.objects.get(title=sheetname, type=sheettype)
@@ -289,8 +259,6 @@ def upload(request, media):
                     a = a.replace(a[a.index('Documents'):], '')
                     a = a + 'media/' + str(cover_page.file)
                     img_name = str(file)
-                    # print(cover_page.file, '====', a)
-                    cover = getcoverpage(img_name, a, title)
                 except Exception:
                     pass
 
