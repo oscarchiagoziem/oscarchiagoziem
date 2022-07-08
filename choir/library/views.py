@@ -208,14 +208,14 @@ def upload(request, media):
             shcount = 1
             media_ = ''
             if media == 'Video':
-                media_ = Video.objects.get(title=title)
+                media_ = Video.objects.filter(title=title)
             elif media == 'Audio':
-                media_ = Audio.objects.get(title=title)
+                media_ = Audio.objects.filter(title=title)
                 print(media)
             elif media == 'Sheet':
-                media_ = Sheet.objects.get(title=title)
+                media_ = Sheet.objects.filter(title=title)
 
-            if media_.exists():
+            if media_.count() >=1 :
                 shcount = 0
                 messages.warning(request, f'A {media} with title "{title}" already exists')
 
@@ -378,8 +378,8 @@ def uploaddoc(request, docname):
         details = request.POST['details']
         campus = request.POST['campus']
         file = request.FILES['file']
-        doc = Document.objects.get(title=title)
-        if doc.exists():
+        doc = Document.objects.filter(title=title)
+        if doc.count() >= 1:
             shcount = 0
             messages.warning(request, f'A {docname} with title "{title}" already exists')
 
