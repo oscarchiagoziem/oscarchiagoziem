@@ -215,7 +215,7 @@ def upload(request, media):
             elif media == 'Sheet':
                 media_ = Sheet.objects.filter(title=title)
 
-            if media_.count() >=1 :
+            if len(media_) >=1 :
                 shcount = 0
                 messages.warning(request, f'A {media} with title "{title}" already exists')
 
@@ -379,7 +379,7 @@ def uploaddoc(request, docname):
         campus = request.POST['campus']
         file = request.FILES['file']
         doc = Document.objects.filter(title=title)
-        if doc.count() >= 1:
+        if len(doc) >= 1:
             shcount = 0
             messages.warning(request, f'A {docname} with title "{title}" already exists')
 
