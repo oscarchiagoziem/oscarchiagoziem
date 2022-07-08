@@ -83,8 +83,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'choirdb',
         'USER': 'postgres',
-        'PASSWORD': 'superuser',
-        'HOST': 'localhost',
+        'PASSWORD': 'AVNS_qDxTbTucn6gSuigjhLi',
+        'HOST': 'app-b72935fe-d81b-4b8f-80d4-219369c1f4b8-do-user-11850756-0.b.db.ondigitalocean.com',
         'PORT': 25060,
     }
 }
