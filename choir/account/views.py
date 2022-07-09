@@ -90,7 +90,7 @@ def editprofile(request, username):
         context = {'profile': profile,
                    'exco': exco,
                    'about': about, }
-        #print(campuses, profile, '================')
+        print(campuses, profile, '================',profile.campus)
         return render(request, 'authentication/editprofile.html', context)
 
     elif request.method == 'POST':

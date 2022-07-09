@@ -140,7 +140,7 @@ class Video(models.Model):
     uploader = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     uploaded_at = models.DateField(auto_now_add=True)
     file = models.FileField(upload_to='Videos/%Y/%m/%d/',
-                            validators=[FileExtensionValidator(allowed_extensions=['mp4'])])
+                            validators=[FileExtensionValidator(allowed_extensions=['mp4','mp4','mov', 'flv','avi'])])
 
     def __str__(self):
         return f'{self.title} by {self.composer}'

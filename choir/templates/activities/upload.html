@@ -49,7 +49,7 @@
                             <div class="col-md-6">
                                 <label class="small mb-1" for="id_file">Select File</label>
                                 <div>
-                                    <input multiple type="file" name="file" class="clearablefileinput form-control-file btn btn-secondary m-0" required id="id_file" style="width:100%;" accept="{% if media == 'Act_Video' %}video{% else %}image{% endif %}/*">
+                                    <input multiple type="file" name="file" class="clearablefileinput form-control-file btn btn-secondary m-0" required id="id_file" style="width:100%;" accept="{% if media == 'Act_Video' %}.mp4,.mov,.flv,.avi{% else %}image/*{% endif %}">
                                 </div>
                             </div>
                         </div>

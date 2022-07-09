@@ -207,15 +207,16 @@ def upload(request, media):
             file = request.FILES['file']
             shcount = 1
             media_ = ''
-            if media == 'Video':
+            if media == 'Video' or media == 'video':
                 media_ = Video.objects.filter(title=title)
-            elif media == 'Audio':
+                #print(media_)
+            elif media == 'Audio' or media == 'audio':
                 media_ = Audio.objects.filter(title=title)
-                print(media)
-            elif media == 'Sheet':
+                #print(media)
+            elif media == 'Sheet' or media == 'sheet':
                 media_ = Sheet.objects.filter(title=title)
-
-            if len(media_) >=1 :
+            if len(media_) >=1:
+                #print(media_)
                 shcount = 0
                 messages.warning(request, f'A {media} with title "{title}" already exists')
 
@@ -227,7 +228,7 @@ def upload(request, media):
                            'valfile': request.FILES,
                            'invalid': shcount,
                            'about': about, }
-                return redirect('upload')
+                return redirect('upload', media)
             if media == 'Video':
                 try:
                     instance = Video(title=title, composer=composer,
@@ -378,8 +379,8 @@ def uploaddoc(request, docname):
         details = request.POST['details']
         campus = request.POST['campus']
         file = request.FILES['file']
-        doc = Document.objects.filter(title=title)
-        if len(doc) >= 1:
+        doc = Document.objects.filter(title=title, )
+        if len(doc) >=1:
             shcount = 0
             messages.warning(request, f'A {docname} with title "{title}" already exists')
 

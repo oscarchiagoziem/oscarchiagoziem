@@ -64,8 +64,8 @@
                             <!-- Form Group (location)-->
                             <div class="col-md-6">
                                 <label class="small mb-1" for="id_file">Select File</label>
-                                <div>
-                                    <input multiple type="file" name="file" class="clearablefileinput form-control-file btn btn-secondary m-0" required id="id_file" style="width:100%;" accept="{% if media == 'sheet' %}"application/pdf"{% else %}{{media}}{% endif %}/*">
+                                <div>{{media}}
+                                    <input multiple type="file" name="file" class="clearablefileinput form-control-file btn btn-secondary m-0" required id="id_file" style="width:100%;" accept="application/pdf">
                                 </div>
                             </div>
                         </div>

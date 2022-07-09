@@ -1,18 +1,12 @@
 {% extends "admin/base_site.html" %}
 {% load i18n %}
-{% load crispy_forms_tags %}
+
 {% block title %}{% translate 'Page not found' %}{% endblock %}
 
 {% block content %}
 
-<main id="main" class="main">
-    <section id="register" class="appointment section-bg">
-          <div class="container" >
-              <div class="section-title " style="margin-top:80px;">
-                  <h2>{% translate 'Page not found' %}</h2>
-                    <p>{% translate 'We’re sorry, but the requested page could not be found.' %}</p>
-                </div>
-          </div>
-    </section>
-</main>
+<h2>{% translate 'Page not found' %}</h2>
+
+<p>{% translate 'We’re sorry, but the requested page could not be found.' %}</p>
+
 {% endblock %}

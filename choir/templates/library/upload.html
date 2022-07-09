@@ -85,8 +85,12 @@
                             <!-- Form Group (location)-->
                             <div class="col-md-12">
                                 <label class="small mb-1" for="id_file">Select File</label>
-                                <div>
-                                    <input multiple type="file" name="file" class="clearablefileinput form-control-file btn btn-secondary m-0" required id="id_file" style="width:100%;" accept="{% if media == 'Sheet' %}'application/pdf'{% else %}{{media}}{% endif %}/*">
+                                <div>{{media}}
+                                    <input multiple type="file" name="file" class="clearablefileinput form-control-file btn btn-secondary m-0" required id="id_file" style="width:100%;" accept="{% if media == 'Sheet' or media == 'sheet' %}
+                                                                                                                                                                                                application/pdf
+                                                                                                                                                                                            {% elif media == 'Video' or media == 'video' %}
+                                                                                                                                                                                                    .mp4,.mov,.flv,.avi
+                                                                                                                                                                                            {% elif media == 'Audio' or media == 'audio' %}.mp3,.ogg,.wav{% endif %}">
                                 </div>
                             </div>
                         </div>
