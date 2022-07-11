@@ -6,7 +6,7 @@ from .models import Sheet, Audio, Video, Document
 from account.models import Campus, Executive_Akpugo
 from about.models import About
 from django.contrib import messages
-import os, shutil, fitz
+import os, shutil
 
 
 # Create your views here.
@@ -238,16 +238,24 @@ def upload(request, media):
                 cover_page = Sheet.objects.get(title=title)
                 a = os.path.abspath(str(cover_page.file))
                 a = a.replace(a[a.index('Documents'):], '') + 'media/' + str(cover_page.file)
-                doc = fitz.open(str(a))
-                for page in doc:
-                    if page.number == 0:
-                        pix = page.getPixmap()
-                        dir = os.getcwd() + "/media/Sheet/cover"
-                        if not os.path.exists(dir):
-                            os.makedirs(dir)
-                        image = pix.writePNG(f"{dir}/cover-{title}.png")
-                        cover_page.cover = f"{dir}/cover-{title}.png"
-                        cover_page.save()
+                try:
+                    import  fitz
+                    doc = fitz.open(str(a))
+                    for page in doc:
+                        if page.number == 0:
+                            pix = page.getPixmap()
+                            dir = os.getcwd() + "/media/Sheet/cover"
+                            if not os.path.exists(dir):
+                                os.makedirs(dir)
+                            image = pix.writePNG(f"{dir}/cover-{title}.png")
+
+                            cover_page.cover = f"{dir}/cover-{title}.png"
+                            cover_page.save()
+                except Exception:
+                    cover_page.cover = "media/default.jpg"
+                    cover_page.save()
+
+
 
             messages.success(request, f'The {media} has been added successfully')
             return redirect('upload', media)
