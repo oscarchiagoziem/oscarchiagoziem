@@ -29,26 +29,7 @@
                     </div>
                 </div>
             </div>
-           <p>This is an Archive of all Sheet or copies
-               <form class="row">
-                <div class="form-group has-search col-10 "  id="fieldtext" style="display:block;">
-                    <span class="fa fa-search form-control-feedback" style="position: absolute;
-                                                                                z-index: 2;
-                                                                                display: block;
-                                                                                width: 2.375rem;
-                                                                                height: 2.375rem;
-                                                                                line-height: 2.375rem;
-                                                                                text-align: center;
-                                                                                pointer-events: none;
-                                                                                color: #aaa;"></span>
-                    <input name='q' type="text" class="form-control" id="searchField" placeholder="Search..." style="padding-left: 2.375rem; margin:auto;">
-                 </div>
-                <!-- Example split button -->
-                <div class="btn-group col-2" >
-                  <button type="submit" class="btn btn-success shadow-sm"><i class="fa fa-search"></i></button>
-                </div>
-            </form>
-           </p>
+           <p>This is an Archive of all Sheet or copies</p>
         </div>
           <div class=" container mb-4 card">
             <p class="card-header font-italic bg-warning">Total Items: {{sheet.count}}
@@ -127,6 +108,7 @@
             </div>
 
         </div>
+          {% include 'partials/_pagination.html' %}
 
       </div>
     </section><!-- End activities Section -->

@@ -38,23 +38,23 @@
             </div>
            <p>
                <form class="row">
-                <div class="form-group has-search col-10 "  id="fieldtext" style="display:block;">
-                    <span class="fa fa-search form-control-feedback" style="position: absolute;
-                                                                                z-index: 2;
-                                                                                display: block;
-                                                                                width: 2.375rem;
-                                                                                height: 2.375rem;
-                                                                                line-height: 2.375rem;
-                                                                                text-align: center;
-                                                                                pointer-events: none;
-                                                                                color: #aaa;"></span>
-                    <input name='q' type="text" class="form-control" id="searchField" placeholder="Search..." style="padding-left: 2.375rem; margin:auto;">
-                 </div>
-                <!-- Example split button -->
-                <div class="btn-group col-2" >
-                  <button type="submit" class="btn btn-success shadow-sm"><i class="fa fa-search"></i></button>
-                </div>
-            </form>
+                    <div class="form-group has-search col-10 "  id="fieldtext" style="display:block;">
+                        <span class="fa fa-search form-control-feedback" style="position: absolute;
+                                                                                    z-index: 2;
+                                                                                    display: block;
+                                                                                    width: 2.375rem;
+                                                                                    height: 2.375rem;
+                                                                                    line-height: 2.375rem;
+                                                                                    text-align: center;
+                                                                                    pointer-events: none;
+                                                                                    color: #aaa;"></span>
+                        <input name='q' type="text" class="form-control" id="searchField" placeholder="Search..." style="padding-left: 2.375rem; margin:auto;">
+                     </div>
+                    <!-- Example split button -->
+                    <div class="btn-group col-2" >
+                      <button type="submit" class="btn btn-success shadow-sm"><i class="fa fa-search"></i></button>
+                    </div>
+                </form>
            </p>
         </div>
 
@@ -84,7 +84,7 @@
                                 <small class="text">
                                     <b>
                                         {{sht}}
-                                        {% if sht.type == 'none' %}
+                                        {% if sht.type == 'none'  %}
                                         {% else %}
                                             <small class="text-muted ">[{{sht.type}}]</small>
                                         {% endif %}

@@ -1,12 +1,12 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.http import  HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from .models import Sheet, Audio, Video, Document
 from account.models import Campus, Executive_Akpugo
 from about.models import About
 from django.contrib import messages
-import os, shutil
+import os, shutil, fitz
 
 
 # Create your views here.
@@ -43,29 +43,6 @@ def library(request):
 
 
 def sheet(request):
-    if 'q' in request.GET:
-        q = request.GET['q']
-        sheet = Sheet.objects.filter(title__icontains=q, ) | \
-                Sheet.objects.filter(composer__icontains=q, ) | \
-                Sheet.objects.filter(type__icontains=q, ) | \
-                Sheet.objects.filter(part_of_calender__icontains=q, ) | \
-                Sheet.objects.filter(part_of_mass__icontains=q, )
-
-        paginator = Paginator(sheet, 12)
-        page_number = request.GET.get('page')
-        page_obj = Paginator.get_page(paginator, page_number)
-        search = 1
-
-        try:
-            about = About.objects.get(title='About Madonna Central Choir')
-        except Exception:
-            about = ''
-        context = {'sheet': sheet,
-                   'page_obj': page_obj,
-                   'search': search,
-                   'about': about}
-        return render(request, 'library/sheet.html', context)
-    else:
         sheet = Sheet.objects.filter()
         liturgy_sheet = Sheet.objects.filter(type='Liturgy')
         liturgy_sheet_count = liturgy_sheet.count
@@ -80,6 +57,7 @@ def sheet(request):
             about = About.objects.get(title='About Madonna Central Choir')
         except Exception:
             about = ''
+
         context = {'sheet': sheet,
                    'liturgy_sheet_count': liturgy_sheet_count,
                    'classical_sheet_count': classical_sheet_count,
@@ -93,13 +71,14 @@ def sheet(request):
 
 def sheet_type(request, sheettype):
     if 'q' in request.GET:
+
         q = request.GET['q']
-        sheet = Sheet.objects.filter(title__icontains=q, ) | \
-                Sheet.objects.filter(composer__icontains=q, ) | \
-                Sheet.objects.filter(type__icontains=q, ) | \
-                Sheet.objects.filter(part_of_calender__icontains=q, ) | \
-                Sheet.objects.filter(part_of_mass__icontains=q, ) and \
-                Sheet.objects.filter(type=sheettype)
+
+        sheet = Sheet.objects.filter(title__icontains=q,type=sheettype) | \
+                Sheet.objects.filter(composer__icontains=q,type=sheettype) | \
+                Sheet.objects.filter(part_of_calender__icontains=q, type=sheettype) | \
+                Sheet.objects.filter(part_of_mass__icontains=q, type=sheettype)
+
         count = sheet.count
 
         paginator = Paginator(sheet, 12)
@@ -134,6 +113,7 @@ def sheet_type(request, sheettype):
                    'about': about,
                    'page_obj': page_obj, }
         return render(request, 'library/sheet_type.html', context)
+
 
 @login_required
 def viewsheet(request, sheettype, sheetname):
@@ -209,14 +189,14 @@ def upload(request, media):
             media_ = ''
             if media == 'Video' or media == 'video':
                 media_ = Video.objects.filter(title=title)
-                #print(media_)
+                # print(media_)
             elif media == 'Audio' or media == 'audio':
                 media_ = Audio.objects.filter(title=title)
-                #print(media)
+                # print(media)
             elif media == 'Sheet' or media == 'sheet':
                 media_ = Sheet.objects.filter(title=title)
-            if len(media_) >=1:
-                #print(media_)
+            if len(media_) >= 1:
+                # print(media_)
                 shcount = 0
                 messages.warning(request, f'A {media} with title "{title}" already exists')
 
@@ -229,7 +209,7 @@ def upload(request, media):
                            'invalid': shcount,
                            'about': about, }
                 return redirect('upload', media)
-            if media == 'Video':
+            if media == 'Video' or media == 'video':
                 try:
                     instance = Video(title=title, composer=composer,
                                      type=type, part_of_calender=part_of_calender,
@@ -238,7 +218,7 @@ def upload(request, media):
                     instance.save()
                 except Exception:
                     pass
-            elif media == 'Audio':
+            elif media == 'Audio' or media == 'audio':
                 try:
                     instance = Audio(title=title, composer=composer,
                                      type=type, part_of_calender=part_of_calender,
@@ -247,21 +227,27 @@ def upload(request, media):
                     instance.save()
                 except Exception:
                     pass
-            elif media == 'Sheet':
-                try:
-                    instance = Sheet(title=title, composer=composer, cover='cover',
-                                     type=type, part_of_calender=part_of_calender,
-                                     part_of_mass=part_of_mass, uploader=request.user,
-                                     file=file)
-                    instance.save()
+            elif media == 'Sheet' or media == 'sheet':
 
-                    cover_page = Sheet.objects.get(title=title)
-                    a = os.path.abspath(str(cover_page.file))
-                    a = a.replace(a[a.index('Documents'):], '')
-                    a = a + 'media/' + str(cover_page.file)
-                    img_name = str(file)
-                except Exception:
-                    pass
+                instance = Sheet(title=title, composer=composer, cover='cover',
+                                 type=type, part_of_calender=part_of_calender,
+                                 part_of_mass=part_of_mass, uploader=request.user,
+                                 file=file)
+                instance.save()
+
+                cover_page = Sheet.objects.get(title=title)
+                a = os.path.abspath(str(cover_page.file))
+                a = a.replace(a[a.index('Documents'):], '') + 'media/' + str(cover_page.file)
+                doc = fitz.open(str(a))
+                for page in doc:
+                    if page.number == 0:
+                        pix = page.getPixmap()
+                        dir = os.getcwd() + "/media/Sheet/cover"
+                        if not os.path.exists(dir):
+                            os.makedirs(dir)
+                        image = pix.writePNG(f"{dir}/cover-{title}.png")
+                        cover_page.cover = f"{dir}/cover-{title}.png"
+                        cover_page.save()
 
             messages.success(request, f'The {media} has been added successfully')
             return redirect('upload', media)
@@ -380,7 +366,7 @@ def uploaddoc(request, docname):
         campus = request.POST['campus']
         file = request.FILES['file']
         doc = Document.objects.filter(title=title, )
-        if len(doc) >=1:
+        if len(doc) >= 1:
             shcount = 0
             messages.warning(request, f'A {docname} with title "{title}" already exists')
 
